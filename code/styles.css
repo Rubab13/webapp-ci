@@ -4,6 +4,10 @@ body {
   background-color: #f4f4f4;
 }
 
+.w-45 {
+  width: 48%;
+}
+
 h1 {
   text-align: center;
 }

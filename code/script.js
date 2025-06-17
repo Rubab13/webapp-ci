@@ -16,23 +16,75 @@ const db = firebase.database();
 
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
+const confirmPasswordInput = document.getElementById("confirm-password");
+const passwordWarning = document.getElementById("password-warning");
+const signupBtn = document.getElementById("signup-btn");
 const signoutBtn = document.getElementById("signout-btn");
 
 const bookSection = document.getElementById("book-section");
 const bookForm = document.getElementById("book-form");
 const bookList = document.getElementById("book-list");
+const passwordDigitWarning = document.getElementById("password-digit-warning");
+const emailWarning = document.getElementById("email-warning");
 
 let currentUserId = null;
 
-// 📩 Sign Up
+function validateSignUpFields() {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  const confirmPassword = confirmPasswordInput.value.trim();
+
+  const hasDigit = /\d/.test(password);
+  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+
+  // Email warning
+  if (email && !validEmail) {
+    emailWarning.classList.remove("d-none");
+  } else {
+    emailWarning.classList.add("d-none");
+  }
+
+  // Show warning if passwords do not match
+  if (password && confirmPassword && password !== confirmPassword) {
+    passwordWarning.classList.remove("d-none");
+  } else {
+    passwordWarning.classList.add("d-none");
+  }
+
+  // Show warning if password has no digit
+  if (password && !hasDigit) {
+    passwordDigitWarning.classList.remove("d-none");
+  } else {
+    passwordDigitWarning.classList.add("d-none");
+  }
+
+  if (email && validEmail && password && confirmPassword && password === confirmPassword && hasDigit) {
+    signupBtn.disabled = false;
+  } else {
+    signupBtn.disabled = true;
+  }
+}
+
+// Listen for input changes
+emailInput.addEventListener("input", validateSignUpFields);
+passwordInput.addEventListener("input", validateSignUpFields);
+confirmPasswordInput.addEventListener("input", validateSignUpFields);
+
+// Sign Up
 function signUp() {
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
+  const confirmPassword = confirmPasswordInput.value.trim();
+
+  if (password !== confirmPassword) {
+    alert("Passwords do not match.");
+    return;
+  }
 
   auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       alert("Signed up successfully!");
-      showBookSection(userCredential.user);
+      // showBookSection(userCredential.user);
     })
     .catch((error) => {
       if (error.code === 'auth/email-already-in-use') {
@@ -46,7 +98,7 @@ function signUp() {
   //   .catch(alert);
 }
 
-// 🔓 Sign In
+// Sign In
 function signIn() {
   const email = emailInput.value;
   const password = passwordInput.value;
@@ -54,10 +106,6 @@ function signIn() {
     .catch(alert);
 }
 
-// 🚪 Sign Out
-// function signOut() {
-//   auth.signOut();
-// }
 function signOut() {
   auth.signOut()
     .then(() => {
@@ -69,7 +117,7 @@ function signOut() {
     });
 }
 
-// 🔄 Auth State Listener
+// Auth State Listener
 auth.onAuthStateChanged((user) => {
   if (user) {
     currentUserId = user.uid;
@@ -85,14 +133,48 @@ auth.onAuthStateChanged((user) => {
   }
 });
 
-// ➕ Add Book
+// Add Book
+// bookForm.addEventListener("submit", (e) => {
+//   e.preventDefault();
+//   const title = document.getElementById("title").valuetrim();
+//   const author = document.getElementById("author").value.trim();
+
+//   if (!title || !author || !currentUserId) return;
+
+//   db.ref(`books/${currentUserId}`).push({ title, author });
+//   bookForm.reset();
+// });
+
+// ➕ Add Book with Duplicate Check
 bookForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  const title = document.getElementById("title").value;
-  const author = document.getElementById("author").value;
-  db.ref(`books/${currentUserId}`).push({ title, author });
-  bookForm.reset();
+
+  const title = document.getElementById("title").value.trim();
+  const author = document.getElementById("author").value.trim();
+
+  if (!title || !author || !currentUserId) return;
+
+  const userBooksRef = db.ref(`books/${currentUserId}`);
+
+  userBooksRef.once("value", (snapshot) => {
+    let isDuplicate = false;
+
+    snapshot.forEach((child) => {
+      const book = child.val();
+      if (book.title === title && book.author === author) {
+        isDuplicate = true;
+      }
+    });
+
+    if (isDuplicate) {
+      alert("This book already exists in your collection.");
+    } else {
+      userBooksRef.push({ title, author });
+      bookForm.reset();
+    }
+  });
 });
+
 
 // 📖 Load Books
 // function loadBooks() {
@@ -180,3 +262,17 @@ passwordInput.addEventListener("input", toggleAuthButtons);
 
 // Initial check on page load
 toggleAuthButtons();
+
+function resetForm() {
+  emailInput.value = '';
+  passwordInput.value = '';
+  document.getElementById("confirm-password").value = '';
+
+  // Optionally hide warnings too
+  document.getElementById("password-warning").classList.add("d-none");
+  document.getElementById("password-digit-warning").classList.add("d-none");
+  document.getElementById("email-warning").classList.add("d-none");
+
+  // Disable sign up button again
+  document.getElementById("signup-btn").disabled = true;
+}
