@@ -6,10 +6,24 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class WebAppTest(unittest.TestCase):
-
+  
     def setUp(self):
-        self.driver = webdriver.Chrome()  # Ensure chromedriver is in PATH
-        self.driver.get("http://localhost:5500")  # Your local app URL
+          self.driver = webdriver.Chrome()
+          self.driver.get("http://localhost:5500")
+
+    # def setUp(self):
+    #     self.driver = webdriver.Chrome()  # Ensure chromedriver is in PATH
+    #     self.driver.get("http://localhost:5500")  # Your local app URL
+
+    # def setUp(self):
+    #     options = webdriver.ChromeOptions()
+    #     options.add_argument('--headless')
+    #     options.add_argument('--no-sandbox')
+    #     options.add_argument('--disable-dev-shm-usage')
+
+    #     self.driver = webdriver.Chrome(options=options)
+    #     self.driver.get("http://localhost:8081")  # Change port as per your docker-compose
+
 
 # ----------------------------------------------------------------------------------------------------------------------------
     # testing a web page title
