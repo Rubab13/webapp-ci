@@ -1,0 +1,18 @@
+FROM python:3.9
+
+# Install Chrome and ChromeDriver
+RUN apt-get update && apt-get install -y \
+    wget unzip curl gnupg ca-certificates chromium chromium-driver \
+    && apt-get clean
+
+# Set Chrome paths
+ENV CHROME_BIN=/usr/bin/chromium
+ENV PATH="/usr/lib/chromium/:$PATH"
+
+# Copy requirements and install them
+COPY requirements.txt /app/requirements.txt
+WORKDIR /app
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of your files
+COPY . /app
