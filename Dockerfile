@@ -1,29 +1,24 @@
-# FROM nginx:alpine
-# COPY . /usr/share/nginx/html
-
-# Use official Python base image
 FROM python:3.10-slim
 
-# Install Chrome and dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    wget \
-    curl \
-    unzip \
     chromium \
     chromium-driver \
+    curl \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Set display port to avoid errors
+# Set display (optional)
 ENV DISPLAY=:99
 
-# Set working directory
+# Set work directory
 WORKDIR /app
 
-# Copy project files
+# Copy everything
 COPY . .
 
-# Install Python dependencies
+# Install Python libs
 RUN pip install -r requirements.txt
 
-# Run test command by default (optional)
+# Run the test
 CMD ["python", "-m", "unittest", "web_test.py"]
