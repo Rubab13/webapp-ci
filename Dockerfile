@@ -21,4 +21,4 @@ COPY . .
 RUN pip install -r requirements.txt
 
 # Run the test
-CMD ["python", "-m", "unittest", "web_test.py"]
+CMD ["python", "-m", "unittest", "test_webapp.py"]
