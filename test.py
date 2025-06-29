@@ -8,8 +8,15 @@ from selenium.webdriver.support import expected_conditions as EC
 class WebAppTest(unittest.TestCase):
   
     def setUp(self):
-          self.driver = webdriver.Chrome()
-          self.driver.get("http://localhost:5500")
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+
+        self.driver = webdriver.Chrome(options=chrome_options)
+        self.driver.get("http://localhost:5500")
+          # self.driver = webdriver.Chrome()
+          # self.driver.get("http://localhost:5500")
 
     # def setUp(self):
     #     self.driver = webdriver.Chrome()  # Ensure chromedriver is in PATH
