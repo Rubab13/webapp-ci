@@ -1,29 +1,31 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'markhobson/maven-chrome'
+            args '-v /dev/shm:/dev/shm'
+        }
+    }
 
     stages {
-        stage('Clone Repo') {
+        stage('Checkout Code') {
             steps {
-                // git 'https://github.com/Rubab13/webapp-ci.git'
-                git branch: 'main', url: 'https://github.com/Rubab13/webapp-ci.git'
+                git url: 'https://github.com/Rubab13/webapp-ci.git', branch: 'main'
             }
         }
 
-        stage('Run Tests in Docker') {
+        stage('Run Tests') {
             steps {
-                script {
-                    sh 'docker build -t book-app-tests .'
-                    sh 'docker run --rm book-app-tests'
-                }
+                sh 'mvn clean test'
             }
         }
     }
 
     post {
         always {
-            mail to: "${env.GIT_COMMITTER_EMAIL}",
-                 subject: "Jenkins Test Report",
-                 body: "Tests completed. See Jenkins for logs."
+            junit '**/target/surefire-reports/*.xml'
+            mail to: 'ahmadrubab13@gmail.com',
+                 subject: "Build Status: ${currentBuild.fullDisplayName}",
+                 body: "Build finished with status: ${currentBuild.result}"
         }
     }
 }
