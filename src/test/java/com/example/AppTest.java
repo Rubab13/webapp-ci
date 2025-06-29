@@ -14,7 +14,8 @@ public class AppTest {
         driver = new ChromeDriver(options);
 
         // Run your local site OR deploy it and change the URL here
-        driver.get("file://" + System.getProperty("user.dir") + "/src/main/webapp/index.html");
+        // driver.get("file://" + System.getProperty("user.dir") + "/src/main/webapp/index.html");
+        driver.get("http://localhost:8081/index.html");
     }
 
     @Test
