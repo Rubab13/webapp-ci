@@ -11,43 +11,30 @@ pipeline {
     }
 
     stages {
-        stage('Clone') {
+        stage('Clone Repo') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Selenium Tests') {
             steps {
-                sh 'pytest --html=report.html'
+                sh 'Xvfb :99 -screen 0 1024x768x16 & pytest --html=report.html tests/test_cases.py'
             }
         }
 
-        stage('Archive Report') {
+        stage('Archive Test Report') {
             steps {
                 archiveArtifacts artifacts: 'report.html', onlyIfSuccessful: false
-            }
-        }
-
-        stage('Send Email') {
-            steps {
-                script {
-                    def testResult = currentBuild.result ?: 'SUCCESS'
-                    emailext (
-                        subject: "📘 Book App Test Report: ${testResult}",
-                        body: "Hi,\n\nYour Selenium test result: ${testResult}.\n\nCheck attached report.",
-                        to: "${EMAIL_RECIPIENT}",
-                        attachmentsPattern: 'report.html',
-                        mimeType: 'text/html'
-                    )
-                }
             }
         }
     }
 
     post {
         always {
-            cleanWs()
+            mail to: "${EMAIL_RECIPIENT}",
+                 subject: "📘 Selenium Test Result: ${currentBuild.fullDisplayName}",
+                 body: "Build result: ${currentBuild.result}\nView it here: ${env.BUILD_URL}"
         }
     }
 }
