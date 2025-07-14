@@ -39,14 +39,18 @@
 
 FROM python:3.10-slim
 
-# Install dependencies for Chrome + Selenium
+# Install system dependencies for Chrome, Xvfb, etc.
 RUN apt-get update && apt-get install -y \
-    wget unzip curl gnupg libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1 libxss1 libappindicator3-1 libasound2 \
-    libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxi6 libxtst6 libxrandr2 \
-    chromium chromium-driver xvfb && \
-    rm -rf /var/lib/apt/lists/*
+    gnupg2 curl wget unzip \
+    xvfb \
+    chromium chromium-driver \
+    libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1 \
+    libxss1 libappindicator3-1 libasound2 \
+    libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 \
+    libxdamage1 libxi6 libxtst6 libxrandr2 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set environment variables
+# Set Chrome and display env vars
 ENV CHROME_BIN=/usr/bin/chromium
 ENV CHROMEDRIVER=/usr/bin/chromedriver
 ENV DISPLAY=:99
@@ -54,12 +58,12 @@ ENV DISPLAY=:99
 # Set working directory
 WORKDIR /app
 
-# Install Python dependencies
+# Copy and install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy test files and web app
+# Copy app files
 COPY . .
 
-# Default command
+# Run tests using xvfb
 CMD ["sh", "-c", "Xvfb :99 -screen 0 1024x768x16 & pytest --html=report.html tests/test_cases.py"]
