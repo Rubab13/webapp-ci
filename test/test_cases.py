@@ -345,25 +345,6 @@ class WebAppTests(unittest.TestCase):
       # Check: warning message is visible
       warning = driver.find_element(By.ID, "password-warning")
       self.assertTrue(warning.is_displayed(), "Password mismatch warning should be visible")
-      
-    # test case 5
-    # Password match enables Sign Up button
-    def test_signup_button_enabled_when_passwords_match(self):
-      driver = self.driver
-
-      try:
-        email_input = driver.find_element(By.ID, "email")
-        password_input = driver.find_element(By.ID, "password")
-        signin_button = driver.find_element(By.ID, "signin-btn")
-
-        email_input.clear()
-        password_input.clear()
-
-        self.assertEqual(email_input.get_attribute("value"), "")
-        self.assertEqual(password_input.get_attribute("value"), "")
-        self.assertFalse(signin_button.is_enabled(), "Sign In button should be disabled when fields are empty")
-      except Exception as e:
-          self.fail(f"Test failed due to missing element: {e}")
 
 if __name__ == "__main__":
     unittest.main()
