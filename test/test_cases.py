@@ -321,6 +321,44 @@ class WebAppTests(unittest.TestCase):
             self.assertFalse(signup_button.is_enabled(), "Sign Up button should be disabled when fields are empty")
         except Exception as e:
             self.fail(f"Test failed due to missing element: {e}")
+    
+    # test case 4
+    def test_password_mismatch_disables_signup(self):
+      driver = self.driver
+
+      # Locate fields
+      email_input = driver.find_element(By.ID, "email")
+      password_input = driver.find_element(By.ID, "password")
+      confirm_password_input = driver.find_element(By.ID, "confirm-password")
+      signup_button = driver.find_element(By.ID, "signup-btn")
+      
+      # Fill inputs
+      email_input.send_keys("test@example.com")
+      password_input.send_keys("12345678")
+      confirm_password_input.send_keys("wrongpass")
+
+      time.sleep(0.5)  # Allow JS to react
+      
+      # Check: signup button is disabled
+      self.assertFalse(signup_button.is_enabled(), "Sign Up button should be disabled when passwords mismatch")
+
+      # Check: warning message is visible
+      warning = driver.find_element(By.ID, "password-warning")
+      self.assertTrue(warning.is_displayed(), "Password mismatch warning should be visible")
+      
+    # test case 5
+    # Password match enables Sign Up button
+    def test_signup_button_enabled_when_passwords_match(self):
+      driver = self.driver
+
+      driver.find_element(By.ID, "email").send_keys("user@example.com")
+      driver.find_element(By.ID, "password").send_keys("12345678")
+      driver.find_element(By.ID, "confirm-password").send_keys("12345678")
+
+      time.sleep(0.5)
+      signup_btn = driver.find_element(By.ID, "signup-btn")
+
+      self.assertTrue(signup_btn.is_enabled(), "Sign Up button should be enabled when passwords match")
 
 if __name__ == "__main__":
     unittest.main()
