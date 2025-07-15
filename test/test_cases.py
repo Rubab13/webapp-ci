@@ -279,6 +279,25 @@ class WebAppTests(unittest.TestCase):
         options.binary_location = "/usr/bin/chromium-browser"  # in case needed
         cls.driver = webdriver.Chrome(options=options)
         cls.driver.get("http://13.60.235.48:8000")
+    
+    def setUp(self):
+        """Clear input fields before each test."""
+        driver = self.driver
+        try:
+            email = driver.find_element(By.ID, "email")
+            password = driver.find_element(By.ID, "password")
+            confirm = driver.find_element(By.ID, "confirm-password")
+
+            email.clear()
+            password.clear()
+            confirm.clear()
+
+            # Click reset if needed
+            reset_btn = driver.find_element(By.ID, "reset-btn")
+            driver.execute_script("arguments[0].click();", reset_btn)
+            time.sleep(0.3)
+        except Exception as e:
+            print(f"Setup warning (not critical): {e}")
 
     @classmethod
     def tearDownClass(cls):
