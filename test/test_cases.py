@@ -405,9 +405,36 @@ class WebAppTests(unittest.TestCase):
       # Check that mismatch warning is visible
       self.assertTrue(warning.is_displayed(), "Password mismatch warning should be shown")
 
-      # ✅ Clean inputs
+      # Clean inputs
       password_input.clear()
       confirm_input.clear()
+      
+    # test case 9
+    def test_reset_button_clears_fields(self):
+      driver = self.driver
+
+      # Locate inputs and reset button
+      email_input = driver.find_element(By.ID, "email")
+      password_input = driver.find_element(By.ID, "password")
+      confirm_input = driver.find_element(By.ID, "confirm-password")
+      reset_btn = driver.find_element(By.ID, "reset-btn")
+
+      # Fill some data
+      email_input.send_keys("test@example.com")
+      password_input.send_keys("Pass123")
+      confirm_input.send_keys("Pass123")
+
+      time.sleep(0.3)
+
+      # Click the reset button
+      reset_btn.click()
+
+      time.sleep(0.3)  # Allow JS reset to take effect
+
+      # Assert that all fields are cleared
+      self.assertEqual(email_input.get_attribute("value"), "", "Email field should be cleared")
+      self.assertEqual(password_input.get_attribute("value"), "", "Password field should be cleared")
+      self.assertEqual(confirm_input.get_attribute("value"), "", "Confirm Password field should be cleared")
 
 if __name__ == "__main__":
     unittest.main()
