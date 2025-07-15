@@ -354,11 +354,36 @@ class WebAppTests(unittest.TestCase):
       warning = driver.find_element(By.ID, "email-warning")
       self.assertTrue(warning.is_displayed(), "Email warning should be shown for invalid email")
 
-      # ✅ Clear fields to avoid affecting other tests
+      # Clear fields to avoid affecting other tests
       email_input.clear()
       password_input.clear()
       if driver.find_element(By.ID, "confirm-password"):
           driver.find_element(By.ID, "confirm-password").clear()
+    
+    # test cse 7
+    def test_password_without_digit_shows_warning(self):
+      driver = self.driver
+
+      # Locate password input and warning element
+      password_input = driver.find_element(By.ID, "password")
+      warning = driver.find_element(By.ID, "password-digit-warning")
+
+      # Clear and enter password without digit
+      password_input.clear()
+      password_input.send_keys("NoDigitsHere")
+
+      # Trigger validation (click confirm password or blur)
+      confirm_password_input = driver.find_element(By.ID, "confirm-password")
+      confirm_password_input.click()
+
+      time.sleep(0.5)  # Wait for JS validation
+
+      # Assert that warning becomes visible
+      self.assertTrue(warning.is_displayed(), "Password warning should be shown when there is no digit")
+
+      # Clean up for next tests
+      password_input.clear()
+      confirm_password_input.clear()
 
 if __name__ == "__main__":
     unittest.main()
