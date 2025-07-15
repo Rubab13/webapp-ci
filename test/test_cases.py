@@ -253,7 +253,7 @@ options.add_argument("--no-sandbox")
 
 driver = webdriver.Chrome(options=options)
 
-driver.get("http://localhost:8000/app/index.html")
+driver.get("http://13.60.235.48:8000")
 
 # Example test case
 def test_title():
