@@ -284,10 +284,12 @@ class WebAppTests(unittest.TestCase):
     def tearDownClass(cls):
         cls.driver.quit()
 
+    # test case 1
     def test_title(self):
         """Page title should contain 'Book Collection'"""
         self.assertIn("Book Collection", self.driver.title)
 
+    # test case 2
     def test_signin_button_disabled_when_empty(self):
         """Sign In button should be disabled when fields are empty"""
         driver = self.driver
@@ -302,6 +304,21 @@ class WebAppTests(unittest.TestCase):
 
             # Sign In button should be disabled
             self.assertFalse(signin_button.is_enabled(), "Sign In button should be disabled when fields are empty")
+        except Exception as e:
+            self.fail(f"Test failed due to missing element: {e}")
+            
+    # test case 3
+    def test_signup_button_disabled_when_empty(self):
+        """Sign Up button should be disabled when fields are empty"""
+        driver = self.driver
+        try:
+            email_input = driver.find_element(By.ID, "email")
+            password_input = driver.find_element(By.ID, "password")
+            signup_button = driver.find_element(By.ID, "signup-btn")
+
+            self.assertEqual(email_input.get_attribute("value"), "")
+            self.assertEqual(password_input.get_attribute("value"), "")
+            self.assertFalse(signup_button.is_enabled(), "Sign Up button should be disabled when fields are empty")
         except Exception as e:
             self.fail(f"Test failed due to missing element: {e}")
 
