@@ -336,28 +336,29 @@ class WebAppTests(unittest.TestCase):
       signup_btn = self.driver.find_element(By.ID, "signup-btn")
       self.assertFalse(signup_btn.is_enabled(), "Sign Up button should be disabled by default")
     
-    # def test_password_mismatch_disables_signup(self):
-    #   driver = self.driver
+    # test case 6
+    def test_invalid_email_shows_warning(self):
+      driver = self.driver
 
-    #   # Locate fields
-    #   email_input = driver.find_element(By.ID, "email")
-    #   password_input = driver.find_element(By.ID, "password")
-    #   confirm_password_input = driver.find_element(By.ID, "confirm-password")
-    #   signup_button = driver.find_element(By.ID, "signup-btn")
-      
-    #   # Fill inputs
-    #   email_input.send_keys("test@example.com")
-    #   password_input.send_keys("12345678")
-    #   confirm_password_input.send_keys("wrongpass")
+      # Enter invalid email
+      email_input = driver.find_element(By.ID, "email")
+      email_input.clear()
+      email_input.send_keys("invalid-email")  # No @ or domain
 
-    #   time.sleep(0.5)  # Allow JS to react
-      
-    #   # Check: signup button is disabled
-    #   self.assertFalse(signup_button.is_enabled(), "Sign Up button should be disabled when passwords mismatch")
+      # Trigger validation by focusing another field
+      password_input = driver.find_element(By.ID, "password")
+      password_input.click()
 
-    #   # Check: warning message is visible
-    #   warning = driver.find_element(By.ID, "password-warning")
-    #   self.assertTrue(warning.is_displayed(), "Password mismatch warning should be visible")
+      time.sleep(0.5)  # Wait for JS validation
+
+      warning = driver.find_element(By.ID, "email-warning")
+      self.assertTrue(warning.is_displayed(), "Email warning should be shown for invalid email")
+
+      # ✅ Clear fields to avoid affecting other tests
+      email_input.clear()
+      password_input.clear()
+      if driver.find_element(By.ID, "confirm-password"):
+          driver.find_element(By.ID, "confirm-password").clear()
 
 if __name__ == "__main__":
     unittest.main()
