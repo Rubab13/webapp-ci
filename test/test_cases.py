@@ -427,6 +427,44 @@ class WebAppTests(unittest.TestCase):
       # Clean inputs
       password_input.clear()
       confirm_input.clear()
+  
+    # test case 9
+    def test_09_reset_button_clears_fields(self):
+      """Reset button should clear all input fields"""
+      driver = self.driver
+
+      # Locate inputs and reset button
+      email_input = driver.find_element(By.ID, "email")
+      password_input = driver.find_element(By.ID, "password")
+      confirm_input = driver.find_element(By.ID, "confirm-password")
+      reset_btn = driver.find_element(By.ID, "reset-btn")
+
+      # Fill inputs with test data
+      email_input.clear()
+      password_input.clear()
+      confirm_input.clear()
+      email_input.send_keys("test@example.com")
+      password_input.send_keys("Test1234")
+      confirm_input.send_keys("Test1234")
+
+      time.sleep(0.3)  # Let UI update
+
+      # Click the Reset button
+      try:
+          reset_btn.click()
+          time.sleep(0.5)  # Allow JS to reset fields
+
+          # Assert all fields are cleared
+          self.assertEqual(email_input.get_attribute("value"), "", "Email should be cleared")
+          self.assertEqual(password_input.get_attribute("value"), "", "Password should be cleared")
+          self.assertEqual(confirm_input.get_attribute("value"), "", "Confirm Password should be cleared")
+      except Exception as e:
+          self.fail(f"Reset button click failed or fields not cleared properly: {e}")
+
+      # Manually clear fields in case reset failed (cleanup for next tests)
+      email_input.clear()
+      password_input.clear()
+      confirm_input.clear()
 
 if __name__ == "__main__":
     unittest.main()
