@@ -304,12 +304,12 @@ class WebAppTests(unittest.TestCase):
         cls.driver.quit()
 
     # test case 1
-    def test_title(self):
+    def test_01_title(self):
         """Page title should contain 'Book Collection'"""
         self.assertIn("Book Collection", self.driver.title)
 
     # test case 2
-    def test_signin_button_disabled_when_empty(self):
+    def test_02_signin_button_disabled_when_empty(self):
         """Sign In button should be disabled when fields are empty"""
         driver = self.driver
         try:
@@ -327,7 +327,7 @@ class WebAppTests(unittest.TestCase):
             self.fail(f"Test failed due to missing element: {e}")
             
     # test case 3
-    def test_signup_button_disabled_when_empty(self):
+    def test_03_signup_button_disabled_when_empty(self):
         """Sign Up button should be disabled when fields are empty"""
         driver = self.driver
         try:
@@ -343,20 +343,20 @@ class WebAppTests(unittest.TestCase):
     
     # test case 4
     # Sign In Button is Enabled by Default
-    def test_signin_button_is_enabled(self):
+    def test_04_signin_button_is_disabled_by_default(self):
       """Sign In button should be enabled on page load"""
       signin_btn = self.driver.find_element(By.ID, "signin-btn")
       self.assertFalse(signin_btn.is_enabled(), "Sign In button should be disabled by default")
       
     # test case 5 
     # Sign Up Button is Disabled by Default
-    def test_signup_button_is_disabled(self):
+    def test_05_signup_button_is_disabled_by_default(self):
       """Sign Up button should be disabled on page load"""
       signup_btn = self.driver.find_element(By.ID, "signup-btn")
       self.assertFalse(signup_btn.is_enabled(), "Sign Up button should be disabled by default")
     
     # test case 6
-    def test_invalid_email_shows_warning(self):
+    def test_06_invalid_email_shows_warning(self):
       driver = self.driver
 
       # Enter invalid email
@@ -380,7 +380,7 @@ class WebAppTests(unittest.TestCase):
           driver.find_element(By.ID, "confirm-password").clear()
     
     # test case 7
-    def test_password_without_digit_shows_warning(self):
+    def test_07_password_without_digit_shows_warning(self):
       driver = self.driver
 
       # Locate password input and warning element
@@ -405,7 +405,7 @@ class WebAppTests(unittest.TestCase):
       confirm_password_input.clear()
     
     # test case 8
-    def test_password_mismatch_shows_warning(self):
+    def test_08_password_mismatch_shows_warning(self):
       driver = self.driver
 
       # Locate inputs
