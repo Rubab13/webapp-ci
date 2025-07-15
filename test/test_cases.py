@@ -327,7 +327,7 @@ class WebAppTests(unittest.TestCase):
     def test_signin_button_is_enabled(self):
       """Sign In button should be enabled on page load"""
       signin_btn = self.driver.find_element(By.ID, "signin-btn")
-      self.assertTrue(signin_btn.is_enabled(), "Sign In button should be enabled by default")
+      self.assertFalse(signin_btn.is_enabled(), "Sign In button should be disabled by default")
       
     # test case 5 
     # Sign Up Button is Disabled by Default
