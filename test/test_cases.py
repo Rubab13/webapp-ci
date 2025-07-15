@@ -360,7 +360,7 @@ class WebAppTests(unittest.TestCase):
       if driver.find_element(By.ID, "confirm-password"):
           driver.find_element(By.ID, "confirm-password").clear()
     
-    # test cse 7
+    # test case 7
     def test_password_without_digit_shows_warning(self):
       driver = self.driver
 
@@ -384,6 +384,30 @@ class WebAppTests(unittest.TestCase):
       # Clean up for next tests
       password_input.clear()
       confirm_password_input.clear()
+    
+    # test case 8
+    def test_password_mismatch_shows_warning(self):
+      driver = self.driver
+
+      # Locate inputs
+      password_input = driver.find_element(By.ID, "password")
+      confirm_input = driver.find_element(By.ID, "confirm-password")
+      warning = driver.find_element(By.ID, "password-warning")
+
+      # Enter mismatching passwords
+      password_input.clear()
+      confirm_input.clear()
+      password_input.send_keys("Test1234")
+      confirm_input.send_keys("Mismatch123")
+
+      time.sleep(0.5)  # Allow JS to process
+
+      # Check that mismatch warning is visible
+      self.assertTrue(warning.is_displayed(), "Password mismatch warning should be shown")
+
+      # ✅ Clean inputs
+      password_input.clear()
+      confirm_input.clear()
 
 if __name__ == "__main__":
     unittest.main()
