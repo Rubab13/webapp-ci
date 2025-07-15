@@ -241,24 +241,69 @@
 
 # above code before
 
+# from selenium import webdriver
+# from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.common.by import By
+# import time
+
+# options = Options()
+# options.add_argument("--headless")
+# options.add_argument("--disable-gpu")
+# options.add_argument("--no-sandbox")
+
+# driver = webdriver.Chrome(options=options)
+
+# driver.get("http://13.60.235.48:8000")
+
+# # test case 1
+# def test_title():
+#   assert "Book Collection" in driver.title
+
+# test_title()
+
+# driver.quit()
+
+import unittest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
 
-options = Options()
-options.add_argument("--headless")
-options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")
+class WebAppTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.binary_location = "/usr/bin/chromium-browser"  # in case needed
+        cls.driver = webdriver.Chrome(options=options)
+        cls.driver.get("http://13.60.235.48:8000")
 
-driver = webdriver.Chrome(options=options)
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
 
-driver.get("http://13.60.235.48:8000")
+    def test_title(self):
+        """Page title should contain 'Book Collection'"""
+        self.assertIn("Book Collection", self.driver.title)
 
-# Example test case
-def test_title():
-    assert "Book Collection" in driver.title
+    def test_signin_button_disabled_when_empty(self):
+        """Sign In button should be disabled when fields are empty"""
+        driver = self.driver
+        try:
+            email_input = driver.find_element(By.ID, "email")
+            password_input = driver.find_element(By.ID, "password")
+            signin_button = driver.find_element(By.ID, "signin-btn")
 
-test_title()
+            # Ensure fields are empty
+            self.assertEqual(email_input.get_attribute("value"), "")
+            self.assertEqual(password_input.get_attribute("value"), "")
 
-driver.quit()
+            # Sign In button should be disabled
+            self.assertFalse(signin_button.is_enabled(), "Sign In button should be disabled when fields are empty")
+        except Exception as e:
+            self.fail(f"Test failed due to missing element: {e}")
+
+if __name__ == "__main__":
+    unittest.main()
