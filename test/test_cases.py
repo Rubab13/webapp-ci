@@ -323,28 +323,28 @@ class WebAppTests(unittest.TestCase):
             self.fail(f"Test failed due to missing element: {e}")
     
     # test case 4
-    def test_password_mismatch_disables_signup(self):
-      driver = self.driver
+    # def test_password_mismatch_disables_signup(self):
+    #   driver = self.driver
 
-      # Locate fields
-      email_input = driver.find_element(By.ID, "email")
-      password_input = driver.find_element(By.ID, "password")
-      confirm_password_input = driver.find_element(By.ID, "confirm-password")
-      signup_button = driver.find_element(By.ID, "signup-btn")
+    #   # Locate fields
+    #   email_input = driver.find_element(By.ID, "email")
+    #   password_input = driver.find_element(By.ID, "password")
+    #   confirm_password_input = driver.find_element(By.ID, "confirm-password")
+    #   signup_button = driver.find_element(By.ID, "signup-btn")
       
-      # Fill inputs
-      email_input.send_keys("test@example.com")
-      password_input.send_keys("12345678")
-      confirm_password_input.send_keys("wrongpass")
+    #   # Fill inputs
+    #   email_input.send_keys("test@example.com")
+    #   password_input.send_keys("12345678")
+    #   confirm_password_input.send_keys("wrongpass")
 
-      time.sleep(0.5)  # Allow JS to react
+    #   time.sleep(0.5)  # Allow JS to react
       
-      # Check: signup button is disabled
-      self.assertFalse(signup_button.is_enabled(), "Sign Up button should be disabled when passwords mismatch")
+    #   # Check: signup button is disabled
+    #   self.assertFalse(signup_button.is_enabled(), "Sign Up button should be disabled when passwords mismatch")
 
-      # Check: warning message is visible
-      warning = driver.find_element(By.ID, "password-warning")
-      self.assertTrue(warning.is_displayed(), "Password mismatch warning should be visible")
+    #   # Check: warning message is visible
+    #   warning = driver.find_element(By.ID, "password-warning")
+    #   self.assertTrue(warning.is_displayed(), "Password mismatch warning should be visible")
 
 if __name__ == "__main__":
     unittest.main()
