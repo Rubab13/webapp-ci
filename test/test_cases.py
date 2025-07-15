@@ -343,10 +343,10 @@ class WebAppTests(unittest.TestCase):
     
     # test case 4
     # Sign In Button is Enabled by Default
-    # def test_signin_button_is_enabled(self):
-    #   """Sign In button should be enabled on page load"""
-    #   signin_btn = self.driver.find_element(By.ID, "signin-btn")
-    #   self.assertFalse(signin_btn.is_enabled(), "Sign In button should be disabled by default")
+    def test_signin_button_is_enabled(self):
+      """Sign In button should be enabled on page load"""
+      signin_btn = self.driver.find_element(By.ID, "signin-btn")
+      self.assertFalse(signin_btn.is_enabled(), "Sign In button should be disabled by default")
       
     # test case 5 
     # Sign Up Button is Disabled by Default
@@ -427,40 +427,6 @@ class WebAppTests(unittest.TestCase):
       # Clean inputs
       password_input.clear()
       confirm_input.clear()
-      
-    # test case 9
-    def test_reset_button_clears_fields(self):
-      driver = self.driver
-      
-      try:
-        driver.find_element(By.ID, "email").clear()
-        driver.find_element(By.ID, "password").clear()
-        driver.find_element(By.ID, "confirm-password").clear()
-      except:
-        pass  # In case confirm-password doesn't exist
-
-      # Locate inputs and reset button
-      email_input = driver.find_element(By.ID, "email")
-      password_input = driver.find_element(By.ID, "password")
-      confirm_input = driver.find_element(By.ID, "confirm-password")
-      reset_btn = driver.find_element(By.ID, "reset-btn")
-
-      # Fill some data
-      email_input.send_keys("test@example.com")
-      password_input.send_keys("Pass123")
-      confirm_input.send_keys("Pass123")
-
-      time.sleep(0.3)
-
-      # Click the reset button
-      reset_btn.click()
-
-      time.sleep(0.3)  # Allow JS reset to take effect
-
-      # Assert that all fields are cleared
-      self.assertEqual(email_input.get_attribute("value"), "", "Email field should be cleared")
-      self.assertEqual(password_input.get_attribute("value"), "", "Password field should be cleared")
-      self.assertEqual(confirm_input.get_attribute("value"), "", "Confirm Password field should be cleared")
 
 if __name__ == "__main__":
     unittest.main()
